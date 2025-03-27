@@ -2,21 +2,23 @@
 <html>
 
 <head>
-  <title>WIP</title>
+    <title>WIP</title>
 </head>
 
 <body>
     <h1>WIP</h1>
     {% if session.username %}
     <p>
-        Olet kirjautunut nimellä {{ session.username }}
+        Olet kirjautunut nimellä {{ session.username }}, id-numerosi on {{ session.user_id }}
+    </p>
+    <p>
+        <a href="/new_recipe">Uusi resepti</a>
     </p>
     <p>
         <a href="/logout">Kirjaudu ulos</a>
     </p>
-    {% endif %}
 
-    {% if not session.username %}
+    {% else %}
     <p>
         <a href="/login">Kirjaudu sisään</a>
     </p>
@@ -24,6 +26,13 @@
         <a href="/register">Luo tunnus</a>
     </p>
     {% endif %}
+
+    <h2>Reseptit</h2>
+    <ul>
+        {% for recipe in recipes %}
+        <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
+        {% endfor %}
+    </ul>
 </body>
 
 </html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{ recipe.recipe_name }}</title>
+</head>
+
+<body>
+	<h1>{{ recipe.recipe_name }}</h1>
+    <p>
+        Ainesosat: <br />
+        {{ recipe.ingredients }}
+    </p>
+    <p>
+        Valmistusohjeet: <br />
+        {{ recipe.instructions }}
+    </p>
+    <p>
+        Reseptin luoja: {{ recipe.username }}
+    </p>
+    <p>
+        <a href="/">Takaisin</a>
+    </p>
+</body>
+
+</html>
