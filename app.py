@@ -35,6 +35,34 @@ def create_recipe():
 
     return redirect("/")
 
+@app.route("/edit_recipe/<int:recipe_id>")
+def edit_recipe(recipe_id):
+    recipe = recipes.get_recipe(recipe_id)
+    return render_template("edit_recipe.html", recipe=recipe)
+
+@app.route("/update_recipe", methods=["POST"])
+def update_recipe():
+    recipe_id = request.form["recipe_id"]
+    recipe_name = request.form["recipe_name"]
+    ingredients = request.form["ingredients"]
+    instructions = request.form["instructions"]
+
+    recipes.update_recipe(recipe_id, recipe_name, ingredients, instructions)
+
+    return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
+def remove_recipe(recipe_id):
+    if request.method == "GET":
+        recipe = recipes.get_recipe(recipe_id)
+        return render_template("remove_recipe.html", recipe=recipe)
+    elif request.method == "POST":
+        if "remove" in request.form:
+            recipes.remove_recipe(recipe_id)
+            return redirect("/")
+        else:
+            return redirect("/recipe/" + str(recipe_id))
+
 @app.route("/register")
 def register():
     return render_template("register.html")
@@ -54,7 +82,7 @@ def create_user():
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
 
-    return "Tunnus luotu"
+    return redirect("/")
 
 
 @app.route("/login", methods=["GET", "POST"])

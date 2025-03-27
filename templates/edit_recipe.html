@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Reseptin muokkaus</title>
+</head>
+
+<body>
+	<h1>Reseptin muokkaus</h1>
+	<form action="/update_recipe" method="post">
+		<p>
+			Reseptin nimi: <br />
+			<input type="text" name="recipe_name" value="{{ recipe.recipe_name }}">
+		</p>
+        <p>
+            Ainesosat: <br />
+            <textarea name="ingredients" rows="10" cols="40">{{ recipe.ingredients }}</textarea>
+        </p>
+		<p>
+			Valmistusohjeet: <br />
+			<textarea name="instructions" rows="10" cols="60">{{ recipe.instructions }}</textarea>
+		</p>
+        <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+		<input type="submit" value="Päivitä reseptiä">
+	</form>
+</body>
+
+</html>
