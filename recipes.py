@@ -2,7 +2,7 @@ import db
 
 def add_recipe(recipe_name, ingredients, instructions, user_id):
     sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, user_id)
-                VALUES (?, ?, ?, ?)"""
+            VALUES (?, ?, ?, ?)"""
     db.execute(sql, [recipe_name, ingredients, instructions, user_id])
 
 def get_recipes():
@@ -30,3 +30,11 @@ def update_recipe(recipe_id, recipe_name, ingredients, instructions):
 def remove_recipe(recipe_id):
     sql = "DELETE FROM recipes WHERE id = ?"
     db.execute(sql, [recipe_id])
+
+def search_recipes(query):
+    sql = """SELECT id, recipe_name
+            FROM recipes
+            WHERE recipe_name LIKE ? OR ingredients LIKE ?
+            ORDER BY id DESC"""
+    like = "%" + query + "%"
+    return db.query(sql, [like, like])

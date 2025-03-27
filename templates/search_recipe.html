@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hae reseptejä</title>
+</head>
+
+<body>
+	<h1>Hae reseptejä</h1>
+
+	<form action="/search_recipe" method="get">
+		<p>
+			Hakusana: <input type="text" name="query" value="{{ query }}">
+		</p>
+		<input type="submit" value="Hae reseptejä">
+	</form>	
+
+    <p>
+        <a href="/">Takaisin</a>
+    </p>
+
+    {% if query %}
+    <h2>Haun tulokset</h2>
+    <ul>
+        {% for recipe in results %}
+        <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+
+</html>

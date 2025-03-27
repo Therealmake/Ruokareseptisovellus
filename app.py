@@ -15,6 +15,16 @@ def index():
     all_recipes = recipes.get_recipes()
     return render_template("index.html", recipes=all_recipes)
 
+@app.route("/search_recipe")
+def search_recipe():
+    query = request.args.get("query")
+    if query:
+        results = recipes.search_recipes(query)
+    else:
+        query = ""
+        results = []
+    return render_template("search_recipe.html", query=query, results=results)
+
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
