@@ -20,6 +20,26 @@
 			Valmistusohjeet: <br />
 			<textarea name="instructions" rows="10" cols="60" maxlength="2000" required>{{ recipe.instructions }}</textarea>
 		</p>
+		<p>
+			Ruokavalio: <br />
+			{% for diet in diets %}
+				<input type="checkbox" name="diet" value="{{ diet.name }}" 
+					{% if diet.name in selected_diets %}checked{% endif %} />
+				{{ diet.name }}
+			{% endfor %}
+		</p>
+		<p>
+			Kategoria: <br />
+			<select name="category">
+				<option value="">(valitse)</option>
+				{% for category in categories %}
+				<option value="{{ category.name }}"
+					{% if category.name == selected_category %}selected{% endif %}>
+					{{ category.name }}
+				</option>
+				{% endfor %}
+			</select>
+		</p>
         <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
 		<input type="submit" value="Päivitä reseptiä">
 	</form>

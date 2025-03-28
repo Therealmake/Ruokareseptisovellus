@@ -20,6 +20,21 @@
 			Valmistusohjeet: <br />
 			<textarea name="instructions" rows="10" cols="60" maxlength="2000" required></textarea>
 		</p>
+		<p>
+			Ruokavalio: <br />
+			{% for diet in diets %}
+				<input type="checkbox" name="diet" value="{{ diet.name }}" />{{ diet.name }}
+			{% endfor %}
+		</p>
+		<p>
+			Kategoria: <br />
+			<select name="category">
+				<option value="">(valitse)</option>
+				{% for category in categories %}
+				<option value="{{ category.name }}">{{ category.name }}</option>
+				{% endfor %}
+			</select>
+		</p>
 		<input type="submit" value="Luo resepti">
 	</form>
 </body>

@@ -7,6 +7,18 @@
 
 <body>
 	<h1>{{ recipe.recipe_name }}</h1>
+    {% if recipe.category %}
+    <p>
+        Kategotria: <br />
+        {{ recipe.category }}
+    </p>
+    {% endif %}
+    {% if recipe.diet %}
+    <p>
+        Ruokavalio: <br />
+        {{ recipe.diet }}
+    </p>
+    {% endif %}
     <p>
         Ainesosat: <br />
         {{ recipe.ingredients }}

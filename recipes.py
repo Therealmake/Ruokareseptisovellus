@@ -1,12 +1,22 @@
 import db
 
-def add_recipe(recipe_name, ingredients, instructions, user_id):
-    sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, user_id)
-            VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [recipe_name, ingredients, instructions, user_id])
+def get_all_categories():
+    sql = "SELECT name FROM categories ORDER BY id"
+    result = db.query(sql)
+    return result
+
+def get_all_diets():
+    sql = "SELECT name FROM diets ORDER BY id"
+    result = db.query(sql)
+    return result
+
+def add_recipe(recipe_name, ingredients, instructions, category, diet, user_id):
+    sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, category, diet, user_id)
+            VALUES (?, ?, ?, ?, ?, ?)"""
+    db.execute(sql, [recipe_name, ingredients, instructions, category, diet, user_id])
 
 def get_recipes():
-    sql = "SELECT id, recipe_name FROM recipes ORDER BY id"
+    sql = "SELECT id, recipe_name FROM recipes ORDER BY id DESC"
     return db.query(sql)
 
 def get_recipe(recipe_id):
@@ -14,6 +24,8 @@ def get_recipe(recipe_id):
                     R.recipe_name,
                     R.ingredients,
                     R.instructions,
+                    R.category,
+                    R.diet,
                     U.username,
                     U.id user_id
             FROM recipes R, users U
@@ -21,12 +33,14 @@ def get_recipe(recipe_id):
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
 
-def update_recipe(recipe_id, recipe_name, ingredients, instructions):
+def update_recipe(recipe_id, recipe_name, ingredients, instructions, category, diet):
     sql = """UPDATE recipes SET recipe_name = ?,
                                 ingredients = ?,
-                                instructions = ?
+                                instructions = ?,
+                                category = ?,
+                                diet = ?
                             WHERE id = ?"""
-    db.execute(sql, [recipe_name, ingredients, instructions, recipe_id])
+    db.execute(sql, [recipe_name, ingredients, instructions, category, diet, recipe_id])
 
 def remove_recipe(recipe_id):
     sql = "DELETE FROM recipes WHERE id = ?"

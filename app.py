@@ -48,11 +48,15 @@ def show_recipe(recipe_id):
 @app.route("/new_recipe")
 def new_recipe():
     require_login()
-    return render_template("new_recipe.html")
+    categories = recipes.get_all_categories()
+    diets = recipes.get_all_diets()
+    return render_template("new_recipe.html", categories=categories, diets=diets)
 
 @app.route("/create_recipe", methods=["POST"])
 def create_recipe():
     require_login()
+    categories = recipes.get_all_categories()
+    diets = recipes.get_all_diets()
     recipe_name = request.form["recipe_name"]
     if not recipe_name or len(recipe_name) > 50:
         abort(403)
@@ -63,8 +67,14 @@ def create_recipe():
     if not instructions or len(instructions) > 2000:
         abort(403)
     user_id = session["user_id"]
+    category = request.form["category"]
+    if category not in categories:
+        abort(403)
+    diet = ", ".join(request.form.getlist("diet"))
+    if diet not in diets:
+        abort(403)
 
-    recipes.add_recipe(recipe_name, ingredients, instructions, user_id)
+    recipes.add_recipe(recipe_name, ingredients, instructions, category, diet, user_id)
 
     return redirect("/")
 
@@ -76,11 +86,19 @@ def edit_recipe(recipe_id):
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-    return render_template("edit_recipe.html", recipe=recipe)
+    categories = recipes.get_all_categories()
+    diets = recipes.get_all_diets()
+    selected_category = recipe["category"]
+    selected_diets = [d.strip() for d in recipe["diet"].split(",")] if recipe["diet"] else []
+    return render_template("edit_recipe.html", recipe=recipe, categories=categories,
+                           diets=diets, selected_category=selected_category,
+                           selected_diets=selected_diets)
 
 @app.route("/update_recipe", methods=["POST"])
 def update_recipe():
     require_login()
+    categories = recipes.get_all_categories()
+    diets = recipes.get_all_diets()
     recipe_id = request.form["recipe_id"]
     recipe = recipes.get_recipe(recipe_id)
     if recipe["user_id"] != session["user_id"]:
@@ -92,7 +110,13 @@ def update_recipe():
     if not ingredients or len(ingredients) > 200:
         abort(403)
     instructions = request.form["instructions"]
-    recipes.update_recipe(recipe_id, recipe_name, ingredients, instructions)
+    category = request.form["category"]
+    if category not in categories:
+        abort(403)
+    diet = ", ".join(request.form.getlist("diet"))
+    if diet not in diets:
+        abort(403)
+    recipes.update_recipe(recipe_id, recipe_name, ingredients, instructions, category, diet)
     return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
