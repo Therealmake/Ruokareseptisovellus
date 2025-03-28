@@ -21,6 +21,8 @@ def index():
 @app.route("/search_recipe")
 def search_recipe():
     query = request.args.get("query")
+    if len(query) >= 100:
+        abort(403)
     if query:
         results = recipes.search_recipes(query)
     else:
@@ -44,8 +46,14 @@ def new_recipe():
 def create_recipe():
     require_login()
     recipe_name = request.form["recipe_name"]
+    if not recipe_name or len(recipe_name) > 50:
+        abort(403)
     ingredients = request.form["ingredients"]
+    if not ingredients or len(ingredients) > 200:
+        abort(403)
     instructions = request.form["instructions"]
+    if not instructions or len(instructions) > 2000:
+        abort(403)
     user_id = session["user_id"]
 
     recipes.add_recipe(recipe_name, ingredients, instructions, user_id)
