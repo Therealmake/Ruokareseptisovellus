@@ -4,7 +4,7 @@ import config
 import recipes
 
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import abort, flash, redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -28,6 +28,8 @@ def search_recipe():
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
     return render_template("show_recipe.html", recipe=recipe)
 
 @app.route("/new_recipe")
@@ -48,25 +50,34 @@ def create_recipe():
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
     return render_template("edit_recipe.html", recipe=recipe)
 
 @app.route("/update_recipe", methods=["POST"])
 def update_recipe():
     recipe_id = request.form["recipe_id"]
+    recipe = recipes.get_recipe(recipe_id)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
     recipe_name = request.form["recipe_name"]
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
-
     recipes.update_recipe(recipe_id, recipe_name, ingredients, instructions)
-
     return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/remove_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def remove_recipe(recipe_id):
+    recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
     if request.method == "GET":
-        recipe = recipes.get_recipe(recipe_id)
         return render_template("remove_recipe.html", recipe=recipe)
-    elif request.method == "POST":
+    if request.method == "POST":
         if "remove" in request.form:
             recipes.remove_recipe(recipe_id)
             return redirect("/")
@@ -85,7 +96,6 @@ def create_user():
     if password1 != password2:
         return "VIRHE: salasanat eivät ole samat"
     password_hash = generate_password_hash(password1)
-
     try:
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
@@ -93,7 +103,6 @@ def create_user():
         return "VIRHE: tunnus on jo varattu"
 
     return redirect("/")
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -106,16 +115,15 @@ def login():
 
         sql = "SELECT id, password_hash FROM users WHERE username = ?"
         result = db.query(sql, [username])[0]
+
         user_id = result["id"]
         password_hash = result["password_hash"]
-
         if check_password_hash(password_hash, password):
             session["user_id"] = user_id
             session["username"] = username
             return redirect("/")
         else:
             return "VIRHE: väärä tunnus tai salasana"
-
 
 @app.route("/logout")
 def logout():
