@@ -78,7 +78,11 @@ def update_recipe():
     if recipe["user_id"] != session["user_id"]:
         abort(403)
     recipe_name = request.form["recipe_name"]
+    if not recipe_name or len(recipe_name) > 50:
+        abort(403)
     ingredients = request.form["ingredients"]
+    if not ingredients or len(ingredients) > 200:
+        abort(403)
     instructions = request.form["instructions"]
     recipes.update_recipe(recipe_id, recipe_name, ingredients, instructions)
     return redirect("/recipe/" + str(recipe_id))

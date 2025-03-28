@@ -10,15 +10,15 @@
 	<form action="/update_recipe" method="post">
 		<p>
 			Reseptin nimi: <br />
-			<input type="text" name="recipe_name" value="{{ recipe.recipe_name }}">
+			<input type="text" name="recipe_name" value="{{ recipe.recipe_name }}" maxlength="50" required>
 		</p>
         <p>
             Ainesosat: <br />
-            <textarea name="ingredients" rows="10" cols="40">{{ recipe.ingredients }}</textarea>
+            <textarea name="ingredients" rows="10" cols="40" maxlength="200" required>{{ recipe.ingredients }}</textarea>
         </p>
 		<p>
 			Valmistusohjeet: <br />
-			<textarea name="instructions" rows="10" cols="60">{{ recipe.instructions }}</textarea>
+			<textarea name="instructions" rows="10" cols="60" maxlength="2000" required>{{ recipe.instructions }}</textarea>
 		</p>
         <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
 		<input type="submit" value="Päivitä reseptiä">
