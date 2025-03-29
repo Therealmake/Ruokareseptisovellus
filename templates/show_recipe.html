@@ -52,9 +52,11 @@
 {% else %}
     <p>Ei vielä kommentteja.</p>
 {% endif %}
+{% if session.username %}
 <form action="/create_comment" method="post">
     <input type="text" name="comment" placeholder="Lisää kommentti" maxlength="200">
     <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
     <input type="submit" value="Kommentoi">
 </form>
+{% endif %}
 {% endblock %}
