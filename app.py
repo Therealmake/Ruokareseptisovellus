@@ -1,4 +1,5 @@
 import sqlite3
+import re
 import db
 import config
 import recipes
@@ -71,10 +72,11 @@ def show_image(recipe_id):
 def create_comment():
     require_login()
     comment = request.form.get("comment")
-    if not comment:
-        abort(403)
     recipe_id = request.form["recipe_id"]
     recipe = recipes.get_recipe(recipe_id)
+    if not comment or not re.search(r"[A-Za-zÅÄÖåäö0-9]", comment):
+        flash("Et voi luoda tyhjää kommenttia")
+        return redirect("/recipe/" + str(recipe_id))
     if not recipe:
         abort(404)
     user_id = session["user_id"]
@@ -217,12 +219,14 @@ def create_user():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
+        flash("Salasanat eivät ole samat")
+        return redirect("/register")
 
     try:
         users.create_user(username, password1)
     except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
+        flash("Tunnus on jo käytössä")
+        return redirect("/register")
 
     return redirect("/")
 
@@ -242,7 +246,8 @@ def login():
             session["username"] = username
             return redirect("/")
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            flash("Väärä käyttäjätunnus tai salasana")
+            return redirect("/login")
 
 @app.route("/logout")
 def logout():

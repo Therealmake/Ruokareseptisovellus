@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
 
-{% block title %}Reseptin poisto{% endblock %}
+{% block title %}{{ recipe.recipe_name }}{% endblock %}
 
 {% block content %}
-<h1>Reseptin poisto</h1>
+<h2>{{ recipe.recipe_name }}</h2>
+<h3>Reseptin poisto</h3>
 <p>Olet poistamassa reseptiä: {{ recipe.recipe_name }}</p>
 <p>Haluatko varmasti poistaa tämän reseptin?</p>
 <form action="/remove_recipe/{{ recipe.id }}" method="post">
