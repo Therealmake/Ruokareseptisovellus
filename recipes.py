@@ -33,11 +33,19 @@ def get_comment(comment_id):
 
 def add_recipe(recipe_name, ingredients, instructions, category, diets, image, user_id):
     sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, category, diet, image, user_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)"""
+                VALUES (?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [recipe_name, ingredients, instructions, category, diets, image, user_id])
 
 def get_recipes():
-    sql = "SELECT id, recipe_name FROM recipes ORDER BY id DESC"
+    sql = """SELECT R.id,
+                    R.recipe_name,
+                    U.id user_id,
+                    U.username,
+                    COUNT(C.id) comment_count
+                FROM recipes R JOIN users U ON R.user_id = U.id
+                    LEFT JOIN comments C ON R.id = C.recipe_id
+                GROUP BY R.id
+                ORDER BY R.id DESC"""
     return db.query(sql)
 
 def get_recipe(recipe_id):
@@ -50,8 +58,8 @@ def get_recipe(recipe_id):
                     R.image,
                     U.username,
                     U.id user_id
-            FROM recipes R, users U
-            WHERE R.user_id = U.id AND R.id = ?"""
+                FROM recipes R, users U
+                WHERE R.user_id = U.id AND R.id = ?"""
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
 
@@ -93,8 +101,8 @@ def remove_recipe(recipe_id):
 
 def search_recipes(query):
     sql = """SELECT id, recipe_name
-            FROM recipes
-            WHERE recipe_name LIKE ? OR ingredients LIKE ?
-            ORDER BY id DESC"""
+                FROM recipes
+                WHERE recipe_name LIKE ? OR ingredients LIKE ?
+                ORDER BY id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])

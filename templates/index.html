@@ -8,9 +8,11 @@
 
 {% block content %}
 <h2>Reseptit</h2>
-<ul>
     {% for recipe in recipes %}
-    <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
+    <div class="recipe">
+    <a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a><br />
+    Tekijä: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a> <br />
+    Kommentteja: {{ recipe.comment_count }}
+    </div>
     {% endfor %}
-</ul>
 {% endblock %}
