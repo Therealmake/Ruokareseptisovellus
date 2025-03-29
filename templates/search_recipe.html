@@ -19,10 +19,12 @@
 
 {% if query %}
 <h3>Haun tulokset</h3>
-<ul>
-    {% for recipe in results %}
-    <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
-    {% endfor %}
-</ul>
+{% for recipe in results %}
+<div class="recipe">
+<a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a><br />
+Tekijä: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a> <br />
+Kommentteja: {{ recipe.comment_count }}
+</div>
+{% endfor %}
 {% endif %}
 {% endblock %}

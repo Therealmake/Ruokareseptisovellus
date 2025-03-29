@@ -7,7 +7,11 @@ def get_user(user_id):
     return result[0] if result else None
 
 def get_recipes(user_id):
-    sql = "SELECT id, recipe_name FROM recipes WHERE user_id = ? ORDER BY id DESC"
+    sql = """SELECT R.id, R.recipe_name, COUNT(C.id) comment_count
+                FROM recipes R LEFT JOIN comments C ON C.recipe_id = R.id
+                WHERE R.user_id = ?
+                GROUP BY R.id
+                ORDER BY R.id DESC"""
     return db.query(sql, [user_id])
 
 def create_user(username, password1):

@@ -12,9 +12,10 @@
     {{ user.username }} on julkaissut {{ recipes | count }} reseptiä
 </p>
 <h2>Ilmoitukset</h2>
-<ul>
-    {% for recipe in recipes %}
-    <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
-    {% endfor %}
-</ul>
+{% for recipe in recipes %}
+<div class="recipe">
+<a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a><br />
+Kommentteja: {{ recipe.comment_count }}
+</div>
+{% endfor %}
 {% endblock %}
