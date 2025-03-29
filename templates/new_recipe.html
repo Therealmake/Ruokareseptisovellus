@@ -36,6 +36,7 @@
 		Lisää kuva (valinnainen): <br />
 		<input type="file" name="image" accept=".jpg">
 	</p>
+	<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 	<input type="submit" value="Luo resepti">
 </form>
 {% endblock %}

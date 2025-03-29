@@ -1,12 +1,14 @@
 import sqlite3
 import re
+import secrets
+
+from flask import Flask
+from flask import abort, flash, make_response, redirect, render_template, request, session
+
 import db
 import config
 import recipes
 import users
-
-from flask import Flask
-from flask import abort, flash, make_response, redirect, render_template, request, session
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -24,6 +26,13 @@ def check_category_and_diets(selected_category, selected_diets, categories, diet
     if selected_diets:
         if any(diet not in valid_diets for diet in selected_diets):
             abort(403)
+
+def check_csrf():
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
+
 
 @app.route("/")
 def index():
@@ -71,6 +80,8 @@ def show_image(recipe_id):
 @app.route("/create_comment", methods=["POST"])
 def create_comment():
     require_login()
+    check_csrf()
+
     comment = request.form.get("comment")
     recipe_id = request.form["recipe_id"]
     recipe = recipes.get_recipe(recipe_id)
@@ -88,6 +99,7 @@ def create_comment():
 @app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
 def remove_comment(comment_id):
     require_login()
+
     comment = recipes.get_comment(comment_id)
     if not comment:
         abort(404)
@@ -97,6 +109,8 @@ def remove_comment(comment_id):
     if request.method == "GET":
         return render_template("remove_comment.html", comment=comment)
     if request.method == "POST":
+        check_csrf()
+
         if "remove" in request.form:
             recipes.remove_comment(comment_id)
             return redirect("/recipe/" + str(recipe_id))
@@ -113,6 +127,8 @@ def new_recipe():
 @app.route("/create_recipe", methods=["POST"])
 def create_recipe():
     require_login()
+    check_csrf()
+
     categories = recipes.get_all_categories()
     diets = recipes.get_all_diets()
     recipe_name = request.form["recipe_name"]
@@ -160,6 +176,8 @@ def edit_recipe(recipe_id):
 @app.route("/update_recipe", methods=["POST"])
 def update_recipe():
     require_login()
+    check_csrf()
+
     categories = recipes.get_all_categories()
     diets = recipes.get_all_diets()
     recipe_id = request.form["recipe_id"]
@@ -203,6 +221,7 @@ def remove_recipe(recipe_id):
     if request.method == "GET":
         return render_template("remove_recipe.html", recipe=recipe)
     if request.method == "POST":
+        check_csrf()
         if "remove" in request.form:
             recipes.remove_recipe(recipe_id)
             return redirect("/")
@@ -244,6 +263,7 @@ def login():
         if user_id:
             session["user_id"] = user_id
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             flash("Väärä käyttäjätunnus tai salasana")
