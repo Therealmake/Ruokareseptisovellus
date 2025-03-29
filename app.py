@@ -136,8 +136,8 @@ def create_recipe():
     else:
         image = None
     recipes.add_recipe(recipe_name, ingredients, instructions, selected_category, diets, image, user_id)
-
-    return redirect("/")
+    recipe_id = db.last_insert_id()
+    return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/edit_recipe/<int:recipe_id>")
 def edit_recipe(recipe_id):
