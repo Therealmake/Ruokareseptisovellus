@@ -7,7 +7,8 @@
 
 <form action="/search_recipe" method="get">
     <p>
-        Hakusana: <input type="text" name="query" value="{{ query }}" maxlength="100">
+        <label for="query">Hakusana:</label>
+        <input type="text" id="query" name="query" value="{{ query }}" maxlength="100">
     </p>
     <input type="submit" value="Hae reseptejä">
 </form>	

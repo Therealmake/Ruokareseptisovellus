@@ -7,40 +7,38 @@
 <h3>Reseptin muokkaus</h3>
 <form action="/update_recipe" method="post" enctype="multipart/form-data">
 	<p>
-		Reseptin nimi: <br />
-		<input type="text" name="recipe_name" value="{{ recipe.recipe_name }}" maxlength="50" required>
+		<label for="recipe_name">Reseptin nimi:</label><br />
+		<input type="text" id="recipe_name" name="recipe_name" value="{{ recipe.recipe_name }}" maxlength="50" required>
 	</p>
 	{% if recipe.image %}
 		<p>
 			Nykyinen kuva: <br />
 			<img src="/image/{{ recipe.id }}" alt="Reseptin kuva" width="400" height="400"/>
-			<p>
-				<label>
-					<input type="checkbox" name="delete_image">
-					Poista kuva
-				</label>
-			</p>
+		</p>
+		<p>
+			<input type="checkbox" id="delete_image" name="delete_image">
+			<label for="delete_image">Poista kuva</label>
 		</p>
 	{% endif %}
 	<p>
-		Ainesosat: <br />
-		<textarea name="ingredients" rows="10" cols="40" maxlength="200" required>{{ recipe.ingredients }}</textarea>
+		<label for="ingredients">Ainesosat:</label><br />
+		<textarea id="ingredients" name="ingredients" rows="10" cols="40" maxlength="200" required>{{ recipe.ingredients }}</textarea>
 	</p>
 	<p>
-		Valmistusohjeet: <br />
-		<textarea name="instructions" rows="10" cols="60" maxlength="2000" required>{{ recipe.instructions }}</textarea>
+		<label for="instructions">Valmistusohjeet:</label><br />
+		<textarea id="instructions" name="instructions" rows="10" cols="60" maxlength="2000" required>{{ recipe.instructions }}</textarea>
 	</p>
 	<p>
-		Ruokavalio: <br />
+		<span>Ruokavalio:</span><br />
 		{% for diet in diets %}
-			<input type="checkbox" name="diet" value="{{ diet.name }}" 
+			<input type="checkbox" id="diet_{{ loop.index }}" name="diet" value="{{ diet.name }}"
 				{% if diet.name in selected_diets %}checked{% endif %} />
-			{{ diet.name }}
+			<label for="diet_{{ loop.index }}">{{ diet.name }}</label><br />
 		{% endfor %}
 	</p>
 	<p>
-		Kategoria: <br />
-		<select name="category">
+		<label for="category">Kategoria:</label><br />
+		<select id="category" name="category">
 			<option value="">(valitse)</option>
 			{% for category in categories %}
 			<option value="{{ category.name }}"
@@ -51,14 +49,10 @@
 		</select>
 	</p>
 	<p>
+		<label for="image">{% if recipe.image %}Vaihda kuvaa:{% else %}Lisää kuva (valinnainen):{% endif %}</label><br />
+		<input type="file" id="image" name="image" accept=".jpg">
 		{% if recipe.image %}
-		Vaihda kuvaa: <br />
-		<input type="file" name="image" accept=".jpg">
-		<br>
-		<small>Jätä tyhjäksi, jos et halua vaihtaa kuvaa.</small>
-		{% else %}
-		Lisää kuva (valinnainen): <br />
-		<input type="file" name="image" accept=".jpg">
+			<br><small>Jätä tyhjäksi, jos et halua vaihtaa kuvaa.</small>
 		{% endif %}
 	</p>
 	<input type="hidden" name="recipe_id" value="{{ recipe.id }}">
