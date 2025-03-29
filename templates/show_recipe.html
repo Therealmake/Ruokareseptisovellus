@@ -9,7 +9,7 @@
 {% block content %}
 <h2>{{ recipe.recipe_name }}</h2>
 {% if recipe.image %}
-    <img src="/image/{{ recipe.id }}" width="400" height="400"/>
+    <img src="/image/{{ recipe.id }}" alt="Reseptin kuva" width="400" height="400"/>
 {% endif %}
 {% if recipe.category %}
 <p>
@@ -25,11 +25,11 @@
 {% endif %}
 <p>
     Ainesosat: <br />
-    {{ recipe.ingredients }}
+    {{ recipe.ingredients | show_lines }}
 </p>
 <p>
     Valmistusohjeet: <br />
-    {{ recipe.instructions }}
+    {{ recipe.instructions | show_lines }}
 </p>
 <p>
     Reseptin luoja: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
