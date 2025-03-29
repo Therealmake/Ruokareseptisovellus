@@ -43,7 +43,42 @@ def show_recipe(recipe_id):
     recipe = recipes.get_recipe(recipe_id)
     if not recipe:
         abort(404)
-    return render_template("show_recipe.html", recipe=recipe)
+    comments = recipes.get_comments(recipe_id)
+    return render_template("show_recipe.html", recipe=recipe, comments=comments)
+
+@app.route("/create_comment", methods=["POST"])
+def create_comment():
+    require_login()
+    comment = request.form.get("comment")
+    if not comment:
+        abort(403)
+    recipe_id = request.form["recipe_id"]
+    recipe = recipes.get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
+    user_id = session["user_id"]
+
+    recipes.add_comment(recipe_id, user_id, comment)
+
+    return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/remove_comment/<int:comment_id>", methods=["GET", "POST"])
+def remove_comment(comment_id):
+    require_login()
+    comment = recipes.get_comment(comment_id)
+    if not comment:
+        abort(404)
+    if comment["user_id"] != session["user_id"]:
+        abort(403)
+    recipe_id = comment["recipe_id"]
+    if request.method == "GET":
+        return render_template("remove_comment.html", comment=comment)
+    if request.method == "POST":
+        if "remove" in request.form:
+            recipes.remove_comment(comment_id)
+            return redirect("/recipe/" + str(recipe_id))
+        else:
+            return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/new_recipe")
 def new_recipe():

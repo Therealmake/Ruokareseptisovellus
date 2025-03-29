@@ -14,6 +14,13 @@ CREATE TABLE recipes (
     user_id INTEGER REFERENCES users
 );
 
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY,
+    recipe_id INTEGER REFERENCES recipes,
+    user_id INTEGER REFERENCES users,
+    comment TEXT
+);
+
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY,
     name TEXT
