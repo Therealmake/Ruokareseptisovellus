@@ -7,11 +7,23 @@
 
 <body>
 	<h1>Reseptin muokkaus</h1>
-	<form action="/update_recipe" method="post">
+	<form action="/update_recipe" method="post" enctype="multipart/form-data">
 		<p>
 			Reseptin nimi: <br />
 			<input type="text" name="recipe_name" value="{{ recipe.recipe_name }}" maxlength="50" required>
 		</p>
+		{% if recipe.image %}
+    		<p>
+        		Nykyinen kuva: <br />
+        		<img src="/image/{{ recipe.id }}" width="400" height="400"/>
+				<p>
+					<label>
+						<input type="checkbox" name="delete_image">
+						Poista kuva
+					</label>
+				</p>
+    		</p>
+		{% endif %}
         <p>
             Ainesosat: <br />
             <textarea name="ingredients" rows="10" cols="40" maxlength="200" required>{{ recipe.ingredients }}</textarea>
@@ -40,9 +52,23 @@
 				{% endfor %}
 			</select>
 		</p>
+		<p>
+			{% if recipe.image %}
+			Vaihda kuvaa: <br />
+			<input type="file" name="image" accept=".jpg">
+			<br>
+    		<small>Jätä tyhjäksi, jos et halua vaihtaa kuvaa.</small>
+			{% else %}
+			Lisää kuva (valinnainen): <br />
+			<input type="file" name="image" accept=".jpg">
+			{% endif %}
+		</p>
         <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
 		<input type="submit" value="Päivitä reseptiä">
 	</form>
+	<p>
+		<a href="/recipe/{{ recipe.id }}">Takaisin ilmoitukseen</a>
+	  </p>
 </body>
 
 </html>

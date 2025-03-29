@@ -7,7 +7,7 @@
 
 <body>
 	<h1>Uusi resepti</h1>
-	<form action="/create_recipe" method="post">
+	<form action="/create_recipe" method="post" enctype="multipart/form-data">
 		<p>
 			Reseptin nimi: <br />
 			<input type="text" name="recipe_name" maxlength="50" required>
@@ -34,6 +34,10 @@
 				<option value="{{ category.name }}">{{ category.name }}</option>
 				{% endfor %}
 			</select>
+		</p>
+		<p>
+			Lisää kuva (valinnainen): <br />
+			<input type="file" name="image" accept=".jpg">
 		</p>
 		<input type="submit" value="Luo resepti">
 	</form>

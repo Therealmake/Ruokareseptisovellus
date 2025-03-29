@@ -7,6 +7,9 @@
 
 <body>
 	<h1>{{ recipe.recipe_name }}</h1>
+    {% if recipe.image %}
+        <img src="/image/{{ recipe.id }}" width="400" height="400"/>
+    {% endif %}
     {% if recipe.category %}
     <p>
         Kategotria: <br />

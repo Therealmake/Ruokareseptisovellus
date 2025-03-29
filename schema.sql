@@ -11,6 +11,7 @@ CREATE TABLE recipes (
     instructions TEXT,
     category TEXT,
     diet TEXT,
+    image BLOB,
     user_id INTEGER REFERENCES users
 );
 

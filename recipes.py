@@ -31,10 +31,10 @@ def get_comment(comment_id):
     result =  db.query(sql, [comment_id])
     return result[0] if result else None
 
-def add_recipe(recipe_name, ingredients, instructions, category, diet, user_id):
-    sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, category, diet, user_id)
-            VALUES (?, ?, ?, ?, ?, ?)"""
-    db.execute(sql, [recipe_name, ingredients, instructions, category, diet, user_id])
+def add_recipe(recipe_name, ingredients, instructions, category, diets, image, user_id):
+    sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, category, diet, image, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)"""
+    db.execute(sql, [recipe_name, ingredients, instructions, category, diets, image, user_id])
 
 def get_recipes():
     sql = "SELECT id, recipe_name FROM recipes ORDER BY id DESC"
@@ -47,6 +47,7 @@ def get_recipe(recipe_id):
                     R.instructions,
                     R.category,
                     R.diet,
+                    R.image,
                     U.username,
                     U.id user_id
             FROM recipes R, users U
@@ -54,16 +55,39 @@ def get_recipe(recipe_id):
     result = db.query(sql, [recipe_id])
     return result[0] if result else None
 
-def update_recipe(recipe_id, recipe_name, ingredients, instructions, category, diet):
-    sql = """UPDATE recipes SET recipe_name = ?,
-                                ingredients = ?,
-                                instructions = ?,
-                                category = ?,
-                                diet = ?
-                            WHERE id = ?"""
-    db.execute(sql, [recipe_name, ingredients, instructions, category, diet, recipe_id])
+def get_image(recipe_id):
+    sql = "SELECT image FROM recipes WHERE id = ?"
+    result = db.query(sql, [recipe_id])
+    return result[0][0] if result else None
+
+def update_recipe(recipe_id, recipe_name, ingredients, instructions, category, diets, image):
+    if image is not None:
+        # Update image
+        sql = """UPDATE recipes SET recipe_name = ?,
+                                    ingredients = ?,
+                                    instructions = ?,
+                                    category = ?,
+                                    diet = ?,
+                                    image = ?
+                                WHERE id = ?"""
+        db.execute(sql, [recipe_name, ingredients, instructions, category, diets, image, recipe_id])
+    else:
+        # Don't update image
+        sql = """UPDATE recipes SET recipe_name = ?,
+                                    ingredients = ?,
+                                    instructions = ?,
+                                    category = ?,
+                                    diet = ?
+                                WHERE id = ?"""
+        db.execute(sql, [recipe_name, ingredients, instructions, category, diets, recipe_id])
+
+def delete_image(recipe_id, image):
+    sql = "UPDATE recipes SET image = ? WHERE id = ?"
+    db.execute(sql, [image, recipe_id])
 
 def remove_recipe(recipe_id):
+    sql = "DELETE FROM comments WHERE recipe_id = ?"
+    db.execute(sql, [recipe_id])
     sql = "DELETE FROM recipes WHERE id = ?"
     db.execute(sql, [recipe_id])
 
