@@ -14,7 +14,8 @@
 ## Sovelluksen asennus
 
 Asenna `flask`-kirjasto:
-...
+
+```
 $ pip install flask
 ```
 
