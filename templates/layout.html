@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    <h1>Reseptipankki</h1>
+    <p>
+        {% if session.username %}
+        Olet kirjautunut nimellä <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
+        {% endif %}
+    </p>
+    <p>
+        {% set links = [] %}
+    
+        {% if request.path != "/" %}
+            {% set _ = links.append('<a href="/">Etusivu</a>') %}
+        {% endif %}
+    
+        {% if session.username %}
+            {% if request.path != "/new_recipe" %}
+                {% set _ = links.append('<a href="/new_recipe">Uusi resepti</a>') %}
+            {% endif %}
+            {% set _ = links.append('<a href="/logout">Kirjaudu ulos</a>') %}
+        {% else %}
+            {% if request.path != "/login" %}
+                {% set _ = links.append('<a href="/login">Kirjaudu sisään</a>') %}
+            {% endif %}
+            {% if request.path != "/register" %}
+                {% set _ = links.append('<a href="/register">Luo tunnus</a>') %}
+            {% endif %}
+        {% endif %}
+    
+        {{ links|join(" | ")|safe }}
+    </p>
+
+    {% block search %}{% endblock %}
+
+    {% block content %}{% endblock %}
+</body>
+
+</html>

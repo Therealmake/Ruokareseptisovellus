@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ user.username }}</title>
-</head>
+{% block title %}{{ user.username }}{% endblock %}
 
-<body>
-	<h1>{{ user.username }}</h1>
-    <p>
-        {{ user.username }} on julkaissut {{ recipes | count }} reseptiä
-    </p>
-    <h2>Ilmoitukset</h2>
-    <ul>
-        {% for recipe in recipes %}
-        <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
-        {% endfor %}
-    </ul>
-    <p>
-        <a href="/">Takaisin</a>
-    </p>
-</body>
+{% block search %}
+    {% include "search_bar.html" %}
+{% endblock %}
 
-</html>
+{% block content %}
+<h1>{{ user.username }}</h1>
+<p>
+    {{ user.username }} on julkaissut {{ recipes | count }} reseptiä
+</p>
+<h2>Ilmoitukset</h2>
+<ul>
+    {% for recipe in recipes %}
+    <li><a href="/recipe/{{ recipe.id }}">{{ recipe.recipe_name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

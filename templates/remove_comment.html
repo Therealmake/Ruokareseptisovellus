@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Kommentin poisto</title>
-</head>
+{% block title %}Kommentin poisto{% endblock %}
 
-<body>
-	<h1>Kommentin poisto</h1>
-    <p>
-        Olet poistamassa kommenttiasi: {{ comment.comment }}
-    </p>
-	<form action="/remove_comment/{{ comment.id }}" method="post">
-		<input type="submit" name="remove" value="Poista kommentti">
-        <input type="submit" name="back" value="Palaa takaisin">
-	</form>
-</body>
-
-</html>
+{% block content %}
+<h1>Kommentin poisto</h1>
+<p>
+    Olet poistamassa kommenttiasi: {{ comment.comment }}
+</p>
+<form action="/remove_comment/{{ comment.id }}" method="post">
+    <input type="submit" name="remove" value="Poista kommentti">
+    <input type="submit" name="back" value="Palaa takaisin">
+</form>
+{% endblock %}

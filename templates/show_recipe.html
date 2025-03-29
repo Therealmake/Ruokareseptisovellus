@@ -1,64 +1,60 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ recipe.recipe_name }}</title>
-</head>
+{% block title %}{{ recipe.recipe_name }}{% endblock %}
 
-<body>
-	<h1>{{ recipe.recipe_name }}</h1>
-    {% if recipe.image %}
-        <img src="/image/{{ recipe.id }}" width="400" height="400"/>
-    {% endif %}
-    {% if recipe.category %}
-    <p>
-        Kategotria: <br />
-        {{ recipe.category }}
-    </p>
-    {% endif %}
-    {% if recipe.diet %}
-    <p>
-        Ruokavalio: <br />
-        {{ recipe.diet }}
-    </p>
-    {% endif %}
-    <p>
-        Ainesosat: <br />
-        {{ recipe.ingredients }}
-    </p>
-    <p>
-        Valmistusohjeet: <br />
-        {{ recipe.instructions }}
-    </p>
-    <p>
-        Reseptin luoja: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
-    </p>
-    {% if session.user_id == recipe.user_id %}
-    <p>
-        <a href="/edit_recipe/{{ recipe.id }}">Muokkaa reseptiä</a>
-        <a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
-    </p>
-    {% endif %}
-    <h2>Kommentit</h2>
-    {% if comments %}
-        {% for comment in comments %}
-            <p><a href="/user/{{ comment.user_id }}">{{ comment.username }}</a> kommentoi:</p>
-            <ul>{{ comment.comment }}</ul>
-            {% if comment.user_id == session.user_id %}
-                <a href="/remove_comment/{{ comment.id }}">Poista</a>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <p>Ei vielä kommentteja.</p>
-    {% endif %}
-    <form action="/create_comment" method="post">
-		<input type="text" name="comment" placeholder="Lisää kommentti" maxlength="200">
-        <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
-		<input type="submit" value="Kommentoi">
-	</form>	
-    <p>
-        <a href="/">Takaisin</a>
-    </p>
-</body>
+{% block search %}
+    {% include "search_bar.html" %}
+{% endblock %}
 
-</html>
+{% block content %}
+<h2>{{ recipe.recipe_name }}</h2>
+{% if recipe.image %}
+    <img src="/image/{{ recipe.id }}" width="400" height="400"/>
+{% endif %}
+{% if recipe.category %}
+<p>
+    Kategotria: <br />
+    {{ recipe.category }}
+</p>
+{% endif %}
+{% if recipe.diet %}
+<p>
+    Ruokavalio: <br />
+    {{ recipe.diet }}
+</p>
+{% endif %}
+<p>
+    Ainesosat: <br />
+    {{ recipe.ingredients }}
+</p>
+<p>
+    Valmistusohjeet: <br />
+    {{ recipe.instructions }}
+</p>
+<p>
+    Reseptin luoja: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a>
+</p>
+{% if session.user_id == recipe.user_id %}
+<p>
+    <a href="/edit_recipe/{{ recipe.id }}">Muokkaa reseptiä</a>
+    <a href="/remove_recipe/{{ recipe.id }}">Poista resepti</a>
+</p>
+{% endif %}
+<h3>Kommentit</h3>
+{% if comments %}
+    {% for comment in comments %}
+        <p><a href="/user/{{ comment.user_id }}">{{ comment.username }}</a> kommentoi:</p>
+        <ul>{{ comment.comment }}</ul>
+        {% if comment.user_id == session.user_id %}
+            <a href="/remove_comment/{{ comment.id }}">Poista</a>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>Ei vielä kommentteja.</p>
+{% endif %}
+<form action="/create_comment" method="post">
+    <input type="text" name="comment" placeholder="Lisää kommentti" maxlength="200">
+    <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+    <input type="submit" value="Kommentoi">
+</form>
+{% endblock %}
