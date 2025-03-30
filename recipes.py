@@ -32,7 +32,13 @@ def get_comment(comment_id):
     return result[0] if result else None
 
 def add_recipe(recipe_name, ingredients, instructions, category, diets, image, user_id):
-    sql = """INSERT INTO recipes (recipe_name, ingredients, instructions, category, diet, image, user_id)
+    sql = """INSERT INTO recipes (recipe_name,
+                                    ingredients,
+                                    instructions,
+                                    category,
+                                    diet,
+                                    image,
+                                    user_id)
                 VALUES (?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [recipe_name, ingredients, instructions, category, diets, image, user_id])
 

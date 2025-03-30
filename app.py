@@ -1,10 +1,10 @@
-import sqlite3
 import re
 import secrets
-import markupsafe
+import sqlite3
 
 from flask import Flask
 from flask import abort, flash, make_response, redirect, render_template, request, session
+import markupsafe
 
 import db
 import config
@@ -12,7 +12,7 @@ import recipes
 import users
 
 app = Flask(__name__)
-app.secret_key = config.secret_key
+app.secret_key = config.SECRET_KEY
 
 def require_login():
     if "user_id" not in session:
@@ -50,8 +50,8 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    recipes = users.get_recipes(user_id)
-    return render_template("show_user.html", user=user, recipes=recipes)
+    user_recipes = users.get_recipes(user_id)
+    return render_template("show_user.html", user=user, recipes=user_recipes)
 
 @app.route("/search_recipe")
 def search_recipe():
@@ -119,9 +119,8 @@ def remove_comment(comment_id):
 
         if "remove" in request.form:
             recipes.remove_comment(comment_id)
-            return redirect("/recipe/" + str(recipe_id))
-        else:
-            return redirect("/recipe/" + str(recipe_id))
+
+    return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/new_recipe")
 def new_recipe():
@@ -159,7 +158,8 @@ def create_recipe():
         image = file.read()
     else:
         image = None
-    recipes.add_recipe(recipe_name, ingredients, instructions, selected_category, diets, image, user_id)
+    recipes.add_recipe(recipe_name, ingredients, instructions,
+                        selected_category, diets, image, user_id)
     recipe_id = db.last_insert_id()
     return redirect("/recipe/" + str(recipe_id))
 
@@ -230,9 +230,8 @@ def remove_recipe(recipe_id):
         check_csrf()
         if "remove" in request.form:
             recipes.remove_recipe(recipe_id)
-            return redirect("/")
-        else:
-            return redirect("/recipe/" + str(recipe_id))
+
+    return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/register")
 def register():
@@ -271,9 +270,9 @@ def login():
             session["username"] = username
             session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
-        else:
-            flash("Väärä käyttäjätunnus tai salasana")
-            return redirect("/login")
+
+        flash("Väärä käyttäjätunnus tai salasana")
+    return redirect("/login")
 
 @app.route("/logout")
 def logout():

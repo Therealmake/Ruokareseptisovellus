@@ -29,5 +29,5 @@ def validate_user_credentials(username, password):
     password_hash = result[0]["password_hash"]
     if check_password_hash(password_hash, password):
         return user_id
-    else:
-        return None
+
+    return None
