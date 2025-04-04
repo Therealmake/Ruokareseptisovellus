@@ -230,6 +230,7 @@ def remove_recipe(recipe_id):
         check_csrf()
         if "remove" in request.form:
             recipes.remove_recipe(recipe_id)
+            return redirect("/")
 
     return redirect("/recipe/" + str(recipe_id))
 
