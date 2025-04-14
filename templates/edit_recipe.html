@@ -8,7 +8,8 @@
 <form action="/update_recipe" method="post" enctype="multipart/form-data">
 	<p>
 		<label for="recipe_name">Reseptin nimi:</label><br />
-		<input type="text" id="recipe_name" name="recipe_name" value="{{ recipe.recipe_name }}" maxlength="50" required>
+		<input type="text" id="recipe_name" name="recipe_name" maxlength="50" required><br />
+		<small>Enintään 50 merkkiä.</small>
 	</p>
 	{% if recipe.image %}
 		<p>
@@ -22,11 +23,13 @@
 	{% endif %}
 	<p>
 		<label for="ingredients">Ainesosat:</label><br />
-		<textarea id="ingredients" name="ingredients" rows="10" cols="40" maxlength="200" required>{{ recipe.ingredients }}</textarea>
+		<textarea id="ingredients" name="ingredients" rows="10" cols="40" maxlength="200" required></textarea><br />
+		<small>Enintään 200 merkkiä.</small>
 	</p>
 	<p>
 		<label for="instructions">Valmistusohjeet:</label><br />
-		<textarea id="instructions" name="instructions" rows="10" cols="60" maxlength="2000" required>{{ recipe.instructions }}</textarea>
+		<textarea id="instructions" name="instructions" rows="10" cols="60" maxlength="2000" required></textarea><br />
+		<small>Enintään 2000 merkkiä.</small>
 	</p>
 	<p>
 		<span>Ruokavalio:</span><br />
@@ -50,7 +53,8 @@
 	</p>
 	<p>
 		<label for="image">{% if recipe.image %}Vaihda kuvaa:{% else %}Lisää kuva (valinnainen):{% endif %}</label><br />
-		<input type="file" id="image" name="image" accept=".jpg">
+		<input type="file" id="image" name="image" accept=".jpg"><br />
+		<small>Vain .jpg-tiedostot sallittu.</small>
 		{% if recipe.image %}
 			<br><small>Jätä tyhjäksi, jos et halua vaihtaa kuvaa.</small>
 		{% endif %}
