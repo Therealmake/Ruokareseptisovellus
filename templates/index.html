@@ -14,5 +14,12 @@
     Tekijä: <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a> <br />
     Kommentteja: {{ recipe.comment_count }}
     </div>
+    <hr />
     {% endfor %}
+
+<p>
+    <a href="/{{ page - 1 }}">&lt;&lt;</a>
+    Sivu {{ page }}/{{ page_count }}
+    <a href="/{{ page + 1 }}">&gt;&gt;</a>
+</p>
 {% endblock %}

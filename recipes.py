@@ -42,7 +42,7 @@ def add_recipe(recipe_name, ingredients, instructions, category, diets, image, u
                 VALUES (?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [recipe_name, ingredients, instructions, category, diets, image, user_id])
 
-def get_recipes():
+def get_recipes(page, page_size):
     sql = """SELECT R.id,
                     R.recipe_name,
                     U.id user_id,
@@ -51,8 +51,11 @@ def get_recipes():
                 FROM recipes R JOIN users U ON R.user_id = U.id
                     LEFT JOIN comments C ON R.id = C.recipe_id
                 GROUP BY R.id
-                ORDER BY R.id DESC"""
-    return db.query(sql)
+                ORDER BY R.id DESC
+                LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = (page - 1) * page_size
+    return db.query(sql, [limit, offset])
 
 def get_recipe(recipe_id):
     sql = """SELECT R.id,
@@ -118,3 +121,8 @@ def search_recipes(query):
                 ORDER BY R.id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])
+
+def count_recipes():
+    sql = "SELECT count(id) FROM recipes"
+    result = db.query(sql)
+    return result[0][0]

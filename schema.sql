@@ -31,3 +31,5 @@ CREATE TABLE diets (
     id INTEGER PRIMARY KEY,
     name TEXT
 );
+
+CREATE INDEX idx_recipe_comments ON comments (recipe_id)

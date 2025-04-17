@@ -8,7 +8,7 @@
 <form action="/update_recipe" method="post" enctype="multipart/form-data">
 	<p>
 		<label for="recipe_name">Reseptin nimi:</label><br />
-		<input type="text" id="recipe_name" name="recipe_name" maxlength="50" required><br />
+		<input type="text" id="recipe_name" name="recipe_name" value="{{ recipe.recipe_name }}" maxlength="50" required><br />
 		<small>Enintään 50 merkkiä.</small>
 	</p>
 	{% if recipe.image %}
@@ -23,12 +23,12 @@
 	{% endif %}
 	<p>
 		<label for="ingredients">Ainesosat:</label><br />
-		<textarea id="ingredients" name="ingredients" rows="10" cols="40" maxlength="200" required></textarea><br />
+		<textarea id="ingredients" name="ingredients" rows="10" cols="40" maxlength="200" required>{{ recipe.ingredients }}</textarea><br />
 		<small>Enintään 200 merkkiä.</small>
 	</p>
 	<p>
 		<label for="instructions">Valmistusohjeet:</label><br />
-		<textarea id="instructions" name="instructions" rows="10" cols="60" maxlength="2000" required></textarea><br />
+		<textarea id="instructions" name="instructions" rows="10" cols="60" maxlength="2000" required>{{ recipe.instructions }}</textarea><br />
 		<small>Enintään 2000 merkkiä.</small>
 	</p>
 	<p>
