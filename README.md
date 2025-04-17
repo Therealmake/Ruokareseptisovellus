@@ -11,6 +11,12 @@
 - Käyttäjä pystyy valitsemaan reseptille yhden tai useamman luokittelun (esim. alkuruoka, pääruoka, vegaaninen).
 - Käyttäjä pystyy antamaan reseptille kommentin. Reseptistä näytetään kommentit.
 
+## Sovelluksen testaus suurella tietomäärällä
+- Loin sovellukseen 1 000 käyttäjää, 1 000 000 reseptiä ja 10 000 000 kommenttia
+- Etusivu latasi käytännössä heti, eikä sivujen vaihdossa ole viivettä
+- Reseptien haku toimii hitaammin jos haulla on todella paljon tuloksia (yli 50 000)
+- Kaikki muut toiminnot toimivat viiveittä
+
 ## Sovelluksen asennus
 
 Asenna `flask`-kirjasto:
